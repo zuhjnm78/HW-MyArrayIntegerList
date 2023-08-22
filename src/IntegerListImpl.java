@@ -33,7 +33,7 @@ public class IntegerListImpl implements IntegerList {
 
     @Override
     public Integer add(Integer item) {
-        validateSize();
+        grow();
         validateItem(item);
         array[size++] = item;
         return item;
@@ -41,7 +41,7 @@ public class IntegerListImpl implements IntegerList {
 
     @Override
     public Integer add(int index, Integer item) {
-        validateSize();
+        grow();
         validateItem(item);
         validateIndex(index);
         if (index == size) {
@@ -134,10 +134,10 @@ public class IntegerListImpl implements IntegerList {
         }
     }
 
-    private void validateSize() {
+    private void grow() {
         if (size == array.length) {
-            int newCapacity = array.length * 2;
-            array = Arrays.copyOf(array, newCapacity);
+            double newCapacity = array.length * 1.5;
+            array = Arrays.copyOf(array, (int) newCapacity);
         }
     }
 
@@ -146,11 +146,11 @@ public class IntegerListImpl implements IntegerList {
             throw new InvalidIndexException();
         }
     }
-    private void quickSort(Integer[] arr, int low, int high) {
+    private void recursiveQuickSort(Integer[] arr, int low, int high) {
         if (low < high) {
             int pivotIndex = partition(arr, low, high);
-            quickSort(arr, low, pivotIndex - 1);
-            quickSort(arr, pivotIndex + 1, high);
+            recursiveQuickSort(arr, low, pivotIndex - 1);
+            recursiveQuickSort(arr, pivotIndex + 1, high);
         }
     }
 
@@ -172,7 +172,7 @@ public class IntegerListImpl implements IntegerList {
     }
 
     public void sort(Integer[] copy1, int i, int i1) {
-        quickSort(array, 0, size - 1);
+        recursiveQuickSort(array, 0, size - 1);
     }
     private int binarySearch(Integer[] arr, int target) {
         int low = 0;
